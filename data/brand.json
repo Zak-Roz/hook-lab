@@ -1,0 +1,36 @@
+{
+  "product": "SockLock",
+  "facts": [
+    "SockLock makes magnetic socks: a tiny magnet on the cuffs holds each pair together",
+    "Pairs stay together in the washer and dryer, so socks stop getting lost in the laundry",
+    "Subscription: 5 pairs for $29, then a new delivery every quarter",
+    "New customers take a short quiz and get a personal offer"
+  ],
+  "audience": "US adults who do the household laundry: busy parents, young professionals, people buying a practical gift",
+  "tone": "Casual, self-aware, UGC-style: a real person filming on their phone. Short sentences, everyday words, light humor.",
+  "limits": {
+    "hookMaxWords": 12,
+    "onScreenMaxWords": 7,
+    "firstLineMaxWords": 20
+  },
+  "allowedNumbers": ["5", "29"],
+  "allowedPrices": ["$29"],
+  "bannedPhrases": [
+    { "pattern": "guarantee", "reason": "Unverified guarantee claim" },
+    { "pattern": "100%", "reason": "Absolute claim" },
+    { "pattern": "forever", "reason": "Absolute claim" },
+    { "pattern": "never lose a sock again", "reason": "Absolute claim" },
+    { "pattern": "#1", "reason": "Unverifiable superlative" },
+    { "pattern": "number one", "reason": "Unverifiable superlative" },
+    { "pattern": "best socks", "reason": "Unverifiable superlative" },
+    { "pattern": "doctor", "reason": "Health claim" },
+    { "pattern": "clinically", "reason": "Health claim" },
+    { "pattern": "cure", "reason": "Health claim" },
+    { "pattern": "free", "reason": "Offer is $29 for 5 pairs, nothing is free" },
+    { "pattern": "discount", "reason": "No discount in product facts" },
+    { "pattern": "only today", "reason": "Fake urgency" },
+    { "pattern": "last chance", "reason": "Fake urgency" },
+    { "pattern": "ends tonight", "reason": "Fake urgency" }
+  ],
+  "similarityThreshold": 0.6
+}

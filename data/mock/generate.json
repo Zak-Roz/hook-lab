@@ -1,0 +1,90 @@
+{
+  "original": {
+    "hook": "There's a tiny magnet hidden in these socks.",
+    "first_line": "And it fixes the most annoying chore in my house.",
+    "on_screen_text": "The tiny magnet trick",
+    "core_promise": "A tiny magnet on the cuffs keeps each sock pair together through the washer and dryer, so socks stop getting lost, and a quiz gets you 5 pairs for $29."
+  },
+  "variants": [
+    {
+      "angle": "demo",
+      "hook": "Watch what happens when these two socks touch.",
+      "first_line": "Yep, that's a magnet. And it fixed the most annoying chore in my house.",
+      "on_screen_text": "Watch them snap together",
+      "visual_idea": "Phone close-up of two hands holding socks a few inches apart, then letting go so the cuffs snap together.",
+      "rationale": "Instant visual payoff makes viewers wait to see the snap, and demo is our top-performing angle."
+    },
+    {
+      "angle": "curiosity",
+      "hook": "I stopped sorting socks. Here's the weird reason.",
+      "first_line": "Turns out the secret is a tiny magnet on the cuff.",
+      "on_screen_text": "Why I quit sorting socks",
+      "visual_idea": "Person sitting next to a laundry basket, shrugging at the camera and holding up one sock without showing the cuff yet.",
+      "rationale": "A weird reason is promised but withheld, so viewers stay for the answer."
+    },
+    {
+      "angle": "pain",
+      "hook": "Another laundry day, another sock gone missing.",
+      "first_line": "I got so tired of it that I tried socks with a magnet.",
+      "on_screen_text": "Sock number two? Gone.",
+      "visual_idea": "Handheld shot of a person staring into an empty dryer with one lonely sock in hand.",
+      "rationale": "It names a frustration the viewer already knows, and the visual shows it in one glance."
+    },
+    {
+      "angle": "pov_story",
+      "hook": "POV: every sock comes out of the dryer paired.",
+      "first_line": "Sounds fake, I know. It used to be the opposite in my house.",
+      "on_screen_text": "POV: no more single socks",
+      "visual_idea": "First-person view of hands pulling warm laundry out of the dryer, with sock pairs clinging together.",
+      "rationale": "A first-person moment shows the dream outcome, and the next line admits it sounds too good."
+    },
+    {
+      "angle": "number",
+      "hook": "Three places I used to search for one missing sock.",
+      "first_line": "Now I search zero places. Tiny magnets on the cuffs keep each pair together.",
+      "on_screen_text": "3 places, 1 missing sock",
+      "visual_idea": "Person holds up three fingers to the camera, then points toward a dryer, a bed, and a backpack in quick cuts.",
+      "rationale": "A concrete count from everyday life feels instantly familiar and sets up the fix."
+    },
+    {
+      "angle": "social_proof",
+      "hook": "My sister watched my socks snap together and said, \"What?!\"",
+      "first_line": "Same reaction I had. A tiny magnet on the cuff fixed my laundry problem.",
+      "on_screen_text": "Her reaction says it all",
+      "visual_idea": "Selfie shot of the creator next to a friend or sister whose jaw drops as the socks snap together.",
+      "rationale": "A real person's surprised reaction creates curiosity and makes the claim feel credible."
+    },
+    {
+      "angle": "contrarian",
+      "hook": "Your dryer isn't eating socks. They're just not attached.",
+      "first_line": "So I got socks that stay attached. A tiny magnet on the cuffs does it.",
+      "on_screen_text": "The dryer isn't the problem",
+      "visual_idea": "Creator pats the dryer door like it's been wrongly accused, then holds up a magnetically paired set of socks.",
+      "rationale": "It flips the usual blame onto a new cause, which makes viewers pause to find out what it means."
+    },
+    {
+      "angle": "question",
+      "hook": "What if your socks just stayed together in the wash?",
+      "first_line": "Mine do, because there's a tiny magnet hidden in the cuff.",
+      "on_screen_text": "Socks that stay paired?",
+      "visual_idea": "Creator holds a pair over an open washer and raises an eyebrow at the camera before dropping them in.",
+      "rationale": "It asks a wish the viewer says yes to, then answers right away."
+    },
+    {
+      "angle": "demo",
+      "hook": "Watch me pull this pair out of the dryer.",
+      "first_line": "Here's the thing: it's a tiny magnet in the cuff, and it fixed my laundry day.",
+      "on_screen_text": "Still paired after the dryer",
+      "visual_idea": "Phone shot of the creator opening the dryer, reaching into warm laundry, and lifting out a pair still stuck together.",
+      "rationale": "It sets up a clear moment to watch, and the payoff is the product's core promise."
+    },
+    {
+      "angle": "curiosity",
+      "hook": "Something in this sock cuff changed my laundry day.",
+      "first_line": "It's a tiny magnet, and now my pairs come out of the wash together.",
+      "on_screen_text": "What's inside the cuff?",
+      "visual_idea": "Extreme close-up of a thumb running along a sock cuff while the creator whispers like they're sharing a secret.",
+      "rationale": "A hidden detail with an open question keeps viewers watching for the reveal."
+    }
+  ]
+}

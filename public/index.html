@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hook Lab · SockLock</title>
+<style>
+  :root {
+    --bg: #f5f4f0; --surface: #fff; --ink: #1b1b1f; --muted: #6a6a72; --line: #e3e1da; --soft: #efede7;
+    --accent: #3d47d6; --accent-ink: #fff; --accent-soft: #e9eafb;
+    --ok: #1d7f45; --ok-bg: #e5f4ea; --warn: #9a6512; --warn-bg: #fbf0dc; --err: #b3352a; --err-bg: #fae6e3;
+    --fix: #0f6f86; --fix-bg: #e1f2f6; --caption: #121214; --caption-ink: #fff;
+    --radius: 12px; --shadow: 0 1px 2px rgb(0 0 0 / .05), 0 4px 16px rgb(0 0 0 / .04);
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #131316; --surface: #1c1c21; --ink: #ececf1; --muted: #9b9ba5; --line: #2d2d35; --soft: #24242b;
+      --accent: #8189ff; --accent-ink: #0d0d12; --accent-soft: #262a52;
+      --ok: #5cc98a; --ok-bg: #15301f; --warn: #e3b25a; --warn-bg: #33270f; --err: #f08378; --err-bg: #3a1b18;
+      --fix: #5fc4dc; --fix-bg: #12313a; --caption: #000; --shadow: none;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  header { display: flex; align-items: center; gap: 12px; padding: 14px 24px; border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 0; z-index: 5; }
+  .logo { width: 28px; height: 28px; border-radius: 8px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-weight: 700; }
+  header h1 { font-size: 16px; margin: 0; }
+  header .sub { color: var(--muted); font-size: 13px; }
+  @media (max-width: 600px) { header .sub { display: none; } }
+  .mode { margin-left: auto; white-space: nowrap; font-size: 12px; padding: 4px 10px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); }
+  .mode.live::before, .mode.mock::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; background: var(--ok); vertical-align: 1px; }
+  .mode.mock::before { background: var(--warn); }
+
+  main { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 24px; padding: 24px; max-width: 1480px; margin: 0 auto; }
+  @media (max-width: 960px) { main { grid-template-columns: 1fr; padding: 16px; } }
+  aside { display: flex; flex-direction: column; gap: 16px; align-self: start; position: sticky; top: 80px; }
+  @media (max-width: 960px) { aside { position: static; } }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+  .panel h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 12px; font-weight: 600; }
+  .samples { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .chip { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 4px 10px; font-size: 13px; cursor: pointer; }
+  .chip:hover { border-color: var(--accent); }
+  .chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .chip small { color: var(--muted); margin-left: 4px; }
+  textarea, select, input[type=number] { width: 100%; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); padding: 8px 10px; }
+  textarea:focus, select:focus, input:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: transparent; }
+  #script { min-height: 260px; resize: vertical; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .row { display: grid; grid-template-columns: 1fr 96px; gap: 10px; margin-bottom: 12px; }
+  label.field { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+  .angles { display: flex; flex-wrap: wrap; gap: 6px; }
+  .hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .btn { border: 0; border-radius: 10px; padding: 11px 16px; font-weight: 600; cursor: pointer; background: var(--accent); color: var(--accent-ink); }
+  .btn:disabled { opacity: .55; cursor: progress; }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); font-weight: 500; }
+  .btn.block { width: 100%; }
+  .err-box { background: var(--err-bg); color: var(--err); border-radius: 8px; padding: 10px 12px; font-size: 14px; }
+
+  .empty { border: 1px dashed var(--line); border-radius: var(--radius); padding: 40px; color: var(--muted); text-align: center; }
+  .empty ol { text-align: left; display: inline-block; margin: 12px 0 0; }
+  .summary { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
+  .pill { font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: var(--soft); color: var(--muted); }
+  .pill.ok { background: var(--ok-bg); color: var(--ok); } .pill.warn { background: var(--warn-bg); color: var(--warn); }
+  .pill.error { background: var(--err-bg); color: var(--err); } .pill.fix { background: var(--fix-bg); color: var(--fix); }
+  .summary .spacer { flex: 1; }
+  .original { background: var(--soft); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 16px; font-size: 14px; }
+  .original b { font-weight: 600; } .original .muted { color: var(--muted); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; padding-bottom: 90px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow); transition: border-color .15s; }
+  .card.selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .card-head { display: flex; align-items: center; gap: 8px; }
+  .card-head .id { font-weight: 700; }
+  .angle { font-size: 12px; padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); }
+  .use { margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; user-select: none; }
+  .use input { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+  .caption { background: var(--caption); color: var(--caption-ink); border-radius: 10px; padding: 18px 14px; text-align: center; }
+  .caption textarea { background: transparent; border: 0; color: inherit; text-align: center; font-weight: 800; font-size: 19px; line-height: 1.25; resize: none; padding: 0; }
+  .caption textarea:focus { outline: 1px dashed rgb(255 255 255 / .5); }
+  .f label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+  .card textarea { resize: none; overflow: hidden; }
+  .f textarea { min-height: 0; padding: 6px 8px; }
+  .f.hook textarea { font-weight: 600; font-size: 16px; }
+  .count.over { color: var(--err); font-weight: 700; }
+  .why { font-size: 13px; color: var(--muted); font-style: italic; }
+  .issues { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
+  .issues li { padding: 5px 8px; border-radius: 6px; }
+  .issues .error { background: var(--err-bg); color: var(--err); } .issues .warn { background: var(--warn-bg); color: var(--warn); }
+  .issues .fixed { background: var(--fix-bg); color: var(--fix); }
+
+  .bar { position: fixed; left: 50%; transform: translateX(-50%); bottom: 18px; background: var(--ink); color: var(--bg); border-radius: 14px; padding: 10px 10px 10px 18px; display: flex; gap: 14px; align-items: center; box-shadow: 0 8px 30px rgb(0 0 0 / .25); z-index: 6; }
+  .bar .btn { background: var(--accent); }
+  dialog { border: 0; border-radius: 16px; padding: 0; width: min(860px, calc(100vw - 32px)); background: var(--surface); color: var(--ink); box-shadow: 0 20px 60px rgb(0 0 0 / .35); }
+  dialog::backdrop { background: rgb(0 0 0 / .45); }
+  .dlg-head { display: flex; align-items: center; gap: 10px; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+  .dlg-head h3 { margin: 0; font-size: 16px; } .dlg-head .spacer { flex: 1; }
+  .dlg-body { padding: 0 18px 18px; }
+  .tabs { display: flex; gap: 6px; padding: 12px 0; }
+  pre.preview { margin: 0; max-height: 55vh; overflow: auto; background: var(--soft); border-radius: 10px; padding: 14px; font: 12.5px/1.5 ui-monospace, Menlo, monospace; white-space: pre-wrap; }
+  .saved { font-size: 12px; color: var(--muted); margin-top: 8px; word-break: break-all; }
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .8s linear infinite; vertical-align: -2px; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">H</div>
+  <div><h1>Hook Lab</h1><div class="sub">New openings for SockLock's winning ads</div></div>
+  <span id="mode" class="mode">…</span>
+</header>
+
+<main>
+  <aside>
+    <section class="panel">
+      <h2>1 · Winning script</h2>
+      <div class="samples" id="samples"></div>
+      <textarea id="script" spellcheck="false" placeholder="Paste the script of a winning ad: hook, on-screen text, body, CTA."></textarea>
+    </section>
+    <section class="panel">
+      <h2>2 · Settings</h2>
+      <div class="row">
+        <div><label class="field" for="topic">Topic for library examples</label>
+          <select id="topic"><option value="">Auto (from the script)</option></select></div>
+        <div><label class="field" for="count">Variants</label><input id="count" type="number" min="1"></div>
+      </div>
+      <label class="field">Angles <span class="hint">· library ROMI</span></label>
+      <div class="angles" id="angles"></div>
+      <p class="hint">None selected = all angles, best ROMI first.</p>
+    </section>
+    <button id="generate" class="btn block">Generate variants</button>
+    <div id="error" class="err-box" hidden></div>
+  </aside>
+
+  <section id="results">
+    <div class="empty" id="empty">
+      <strong>From a winning script to a designer brief in about a minute.</strong>
+      <ol>
+        <li>Paste a winning script or load an example.</li>
+        <li>Generate: every variant is checked for length, banned claims, prices and duplicates; broken ones are fixed automatically.</li>
+        <li>Tick the variants you will produce, edit if needed, export the brief.</li>
+      </ol>
+    </div>
+    <div id="output" hidden>
+      <div class="summary" id="summary"></div>
+      <div class="original" id="original"></div>
+      <div class="grid" id="cards"></div>
+    </div>
+  </section>
+</main>
+
+<div class="bar" id="bar" hidden>
+  <span id="selected-count">0 selected</span>
+  <button class="btn" id="export">Export brief</button>
+</div>
+
+<dialog id="dialog">
+  <div class="dlg-head">
+    <h3>Brief ready</h3><span class="spacer"></span>
+    <button class="btn ghost" id="copy">Copy Markdown</button>
+    <button class="btn ghost" id="dl-csv">Download .csv</button>
+    <button class="btn" id="dl-md">Download .md</button>
+    <button class="btn ghost" id="close" aria-label="Close">✕</button>
+  </div>
+  <div class="dlg-body">
+    <div class="tabs">
+      <button class="chip" data-tab="markdown" aria-pressed="true">Markdown</button>
+      <button class="chip" data-tab="csv" aria-pressed="false">CSV (Airtable)</button>
+    </div>
+    <pre class="preview" id="preview"></pre>
+    <div class="saved" id="saved"></div>
+  </div>
+</dialog>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const state = { config: null, sessionId: null, result: null, variants: [], selected: new Set(), angles: new Set(), brief: null, tab: 'markdown' };
+
+/** Tiny DOM helper. Text always goes in as textContent, never as HTML. */
+function h(tag, props = {}, ...children) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else if (v !== undefined && v !== null && v !== false) el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of children.flat()) if (c !== null && c !== undefined && c !== false) el.append(c instanceof Node ? c : String(c));
+  return el;
+}
+
+/** Same rule as the server: words with letters or digits; arrows and dashes don't count. */
+const wordCount = (t) => t.split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
+
+async function api(path, body) {
+  const res = await fetch(path, body === undefined ? {} : { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+  return data;
+}
+
+function showError(message) {
+  $('error').textContent = message || '';
+  $('error').hidden = !message;
+}
+
+const store = {
+  get(key) { try { return localStorage.getItem(key); } catch { return null; } },
+  set(key, value) { try { localStorage.setItem(key, value); } catch {} },
+};
+
+// ---------- settings panel ----------
+async function init() {
+  const config = await api('/api/config');
+  state.config = config;
+  const mode = $('mode');
+  mode.className = `mode ${config.mock ? 'mock' : 'live'}`;
+  mode.textContent = config.mock ? 'Mock · recorded answers' : `Live · ${config.model}`;
+  mode.title = config.mock ? 'No ANTHROPIC_API_KEY (or MOCK=1): replays a recorded answer for the "Tiny magnet" script.' : '';
+
+  for (const s of config.samples) {
+    $('samples').append(h('button', { class: 'chip', onclick: () => { $('script').value = s.script; store.set('script', s.script); } }, prettyName(s.name)));
+  }
+  for (const t of config.topics) $('topic').append(h('option', { value: t }, t));
+  $('count').value = config.defaultCount;
+  $('count').max = config.maxCount;
+
+  for (const a of config.angles) {
+    const chip = h('button', { class: 'chip', 'aria-pressed': 'false', title: a.guide }, a.angle.replace('_', ' '), a.romi ? h('small', {}, `${a.romi}%`) : null);
+    chip.addEventListener('click', () => {
+      state.angles.has(a.angle) ? state.angles.delete(a.angle) : state.angles.add(a.angle);
+      chip.setAttribute('aria-pressed', String(state.angles.has(a.angle)));
+    });
+    $('angles').append(chip);
+  }
+  $('script').value = store.get('script') || config.samples[0]?.script || '';
+  $('script').addEventListener('input', () => store.set('script', $('script').value));
+}
+
+function prettyName(name) {
+  return name.replace(/^winner-\d+-/, '').replace(/-/g, ' ').replace(/\bpov\b/i, 'POV').replace(/^\w/, (c) => c.toUpperCase());
+}
+
+// ---------- generate ----------
+async function generate() {
+  showError('');
+  const btn = $('generate');
+  const started = Date.now();
+  btn.disabled = true;
+  const tick = () => { btn.replaceChildren(h('span', { class: 'spinner' }), `Generating… ${Math.round((Date.now() - started) / 1000)} s`); };
+  tick();
+  const timer = setInterval(tick, 1000);
+  try {
+    const data = await api('/api/generate', {
+      script: $('script').value,
+      count: Number($('count').value),
+      angles: [...state.angles],
+      topic: $('topic').value,
+    });
+    state.sessionId = data.sessionId;
+    state.result = data;
+    state.variants = data.variants.map((v) => ({ ...v }));
+    state.selected = new Set();
+    render();
+  } catch (e) {
+    showError(e.message);
+  } finally {
+    clearInterval(timer);
+    btn.disabled = false;
+    btn.textContent = 'Generate variants';
+  }
+}
+
+// ---------- results ----------
+function render() {
+  const r = state.result;
+  $('empty').hidden = true;
+  $('output').hidden = false;
+
+  renderSummary();
+
+  const o = r.original;
+  $('original').replaceChildren(
+    h('b', {}, 'Original opening · '), `“${o.hook}”`, h('span', { class: 'muted' }, ` · on-screen “${o.on_screen_text}”`),
+    h('div', { class: 'muted' }, `Core promise: ${o.core_promise}`),
+  );
+
+  $('cards').replaceChildren(...state.variants.map(card));
+  document.querySelectorAll('.card textarea').forEach(autosize);
+  updateBar();
+}
+
+/** Grow a textarea to fit its text, so cards have no empty space or inner scroll. */
+function autosize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = `${ta.scrollHeight}px`;
+}
+
+function renderSummary() {
+  const r = state.result;
+  const counts = { ok: 0, warn: 0, error: 0 };
+  for (const v of state.variants) counts[v.status]++;
+  const cost = r.usage.cost_usd === null ? '' : `$${r.usage.cost_usd.toFixed(3)}`;
+  // replaceChildren would print `null` for skipped pills, so filter them out.
+  $('summary').replaceChildren(...[
+    h('span', { class: 'pill' }, `${state.variants.length} variants`),
+    h('span', { class: 'pill ok' }, `${counts.ok} ready`),
+    counts.warn ? h('span', { class: 'pill warn' }, `${counts.warn} to check`) : null,
+    counts.error ? h('span', { class: 'pill error' }, `${counts.error} with errors`) : null,
+    r.repair.fixed ? h('span', { class: 'pill fix', title: 'Variants that failed checks and were rewritten automatically' }, `↻ ${r.repair.fixed} auto-fixed`) : null,
+    r.repair.error ? h('span', { class: 'pill error', title: r.repair.error }, 'auto-fix failed') : null,
+    h('span', { class: 'spacer' }),
+    h('span', { class: 'pill' }, `${(r.durationMs / 1000).toFixed(1)} s`),
+    cost ? h('span', { class: 'pill' }, cost) : null,
+    h('button', { class: 'chip', onclick: selectReady }, 'Select all ready'),
+  ].filter(Boolean));
+}
+
+const LIMITS = () => state.config.limits;
+
+function field(v, key, label, limit, cls) {
+  const ta = h('textarea', { rows: 1, 'aria-label': label });
+  ta.value = v[key];
+  const count = limit ? h('span', { class: 'count' }) : null;
+  const sync = () => {
+    if (!count) return;
+    const n = wordCount(ta.value);
+    count.textContent = `${n}/${limit} words`;
+    count.classList.toggle('over', n > limit);
+  };
+  ta.addEventListener('input', () => { v[key] = ta.value; sync(); autosize(ta); scheduleCheck(v); });
+  sync();
+  return h('div', { class: `f ${cls || ''}` }, h('label', {}, label, count), ta);
+}
+
+function card(v) {
+  const statusText = { ok: 'Ready', warn: 'Check', error: 'Error' }[v.status];
+  const use = h('input', { type: 'checkbox', 'aria-label': `Use ${v.id}` });
+  use.checked = state.selected.has(v.id);
+  use.addEventListener('change', (e) => {
+    use.checked ? state.selected.add(v.id) : state.selected.delete(v.id);
+    e.target.closest('.card').classList.toggle('selected', use.checked);
+    updateBar();
+  });
+
+  const caption = h('textarea', { rows: 1, 'aria-label': 'On-screen text' });
+  caption.value = v.on_screen_text;
+  const capCount = h('div', { class: 'hint', style: 'color: rgb(255 255 255 / .6); margin-top: 6px' });
+  const syncCap = () => { const n = wordCount(caption.value); capCount.textContent = `on-screen · ${n}/${LIMITS().onScreenMaxWords} words`; };
+  caption.addEventListener('input', () => { v.on_screen_text = caption.value; syncCap(); autosize(caption); scheduleCheck(v); });
+  syncCap();
+
+  const issues = h('ul', { class: 'issues' },
+    (v.fixed || []).map((i) => h('li', { class: 'fixed' }, `↻ fixed: ${i.message}`)),
+    v.issues.map((i) => h('li', { class: i.severity }, i.message)),
+  );
+
+  const el = h('article', { class: `card ${state.selected.has(v.id) ? 'selected' : ''}`, 'data-id': v.id },
+    h('div', { class: 'card-head' },
+      h('span', { class: 'id' }, v.id),
+      h('span', { class: 'angle' }, v.angle.replace('_', ' ')),
+      h('span', { class: `pill ${v.status}` }, statusText),
+      v.edited ? h('span', { class: 'pill' }, 'edited') : null,
+      h('label', { class: 'use' }, use, 'Use'),
+    ),
+    h('div', { class: 'caption' }, caption, capCount),
+    field(v, 'hook', 'Hook · voiceover, first 3 s', LIMITS().hookMaxWords, 'hook'),
+    field(v, 'first_line', 'First line · bridges into the body', LIMITS().firstLineMaxWords),
+    field(v, 'visual_idea', 'Visual · first 3 s'),
+    h('div', { class: 'why' }, v.rationale),
+    issues,
+  );
+  return el;
+}
+
+// Re-check a variant on the server shortly after the designer stops typing.
+const timers = new Map();
+function scheduleCheck(v) {
+  v.edited = true;
+  clearTimeout(timers.get(v.id));
+  timers.set(v.id, setTimeout(async () => {
+    try {
+      const res = await api('/api/check', { sessionId: state.sessionId, variant: v });
+      v.status = res.status;
+      v.issues = res.issues;
+      v.fixed = [];
+      refreshCard(v);
+    } catch (e) { showError(e.message); }
+  }, 600));
+}
+
+/** Update status and issues of one card without re-creating its text fields (keeps focus and cursor). */
+function refreshCard(v) {
+  const el = document.querySelector(`.card[data-id="${v.id}"]`);
+  if (!el) return;
+  const fresh = card(v);
+  el.querySelector('.card-head').replaceWith(fresh.querySelector('.card-head'));
+  el.querySelector('.issues').replaceWith(fresh.querySelector('.issues'));
+  renderSummary();
+}
+
+function selectReady() {
+  for (const v of state.variants) if (v.status !== 'error') state.selected.add(v.id);
+  render();
+}
+
+function updateBar() {
+  const n = state.selected.size;
+  $('bar').hidden = n === 0;
+  $('selected-count').textContent = `${n} selected`;
+}
+
+// ---------- export ----------
+async function exportBrief() {
+  showError('');
+  const variants = state.variants.filter((v) => state.selected.has(v.id))
+    .map(({ id, angle, hook, first_line, on_screen_text, visual_idea, rationale }) => ({ id, angle, hook, first_line, on_screen_text, visual_idea, rationale }));
+  try {
+    state.brief = await api('/api/export', { sessionId: state.sessionId, variants });
+    state.tab = 'markdown';
+    showTab();
+    $('saved').textContent = `Saved: ${state.brief.files.markdown}`;
+    $('dialog').showModal();
+  } catch (e) { showError(e.message); }
+}
+
+function showTab() {
+  $('preview').textContent = state.brief[state.tab];
+  for (const b of document.querySelectorAll('[data-tab]')) b.setAttribute('aria-pressed', String(b.dataset.tab === state.tab));
+}
+
+function download(text, ext, type) {
+  const name = state.brief.files.markdown.split(/[\\/]/).pop().replace(/\.md$/, `.${ext}`);
+  const a = h('a', { href: URL.createObjectURL(new Blob([text], { type })), download: name });
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+$('generate').addEventListener('click', generate);
+$('script').addEventListener('keydown', (e) => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) generate(); });
+$('export').addEventListener('click', exportBrief);
+$('close').addEventListener('click', () => $('dialog').close());
+$('dl-md').addEventListener('click', () => download(state.brief.markdown, 'md', 'text/markdown'));
+$('dl-csv').addEventListener('click', () => download(state.brief.csv, 'csv', 'text/csv'));
+$('copy').addEventListener('click', async () => { await navigator.clipboard.writeText(state.brief.markdown); $('copy').textContent = 'Copied'; setTimeout(() => { $('copy').textContent = 'Copy Markdown'; }, 1500); });
+for (const b of document.querySelectorAll('[data-tab]')) b.addEventListener('click', () => { state.tab = b.dataset.tab; showTab(); });
+
+init().catch((e) => showError(`Could not load settings: ${e.message}`));
+</script>
+</body>
+</html>

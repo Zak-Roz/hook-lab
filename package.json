@@ -1,0 +1,28 @@
+{
+  "name": "socklock-hook-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Generates hook / first line / on-screen text variations from a winning ad script for SockLock motion designers.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "start": "node src/server.ts",
+    "generate": "node src/cli.ts generate",
+    "stats": "node src/cli.ts stats",
+    "eval": "node src/cli.ts eval",
+    "test": "node --test \"src/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "1.6.0",
+    "@hono/node-server": "2.1.6",
+    "csv-parse": "7.0.3",
+    "hono": "4.13.17"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "typescript": "5.9.3"
+  }
+}

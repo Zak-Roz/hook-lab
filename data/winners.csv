@@ -1,0 +1,31 @@
+ad_id,launched,topic,angle,hook,first_line,on_screen_text,spend_usd,romi_pct,hook_rate_pct,ctr_pct
+W-101,2026-05,laundry-loss,pain,Where do my socks go after laundry day?,"Every single wash, one sock just vanishes.",The washer ate another sock,38200,168,41,1.6
+W-102,2026-05,laundry-loss,demo,Watch me throw these in the wash. Separately.,"Two socks, one magnet, zero searching after.",They come out paired,31400,159,44,1.5
+W-103,2026-06,morning-rush,pain,It's 7:58 and I'm hunting for a matching sock.,Every. Single. Morning.,Late again because of socks,22800,151,38,1.4
+W-104,2026-06,morning-rush,pov_story,POV: you open the drawer and every sock has its partner.,This is what mornings feel like now.,POV: no sock hunting,27500,162,43,1.7
+W-105,2026-06,laundry-loss,curiosity,There's a tiny magnet hidden in these socks.,And it fixes the most annoying chore in my house.,The tiny magnet trick,41000,174,46,1.8
+W-106,2026-07,kids-chaos,pain,Three kids. Zero matching socks.,Laundry day at our house is a sock graveyard.,Mom of 3 vs. sock chaos,19800,147,36,1.3
+W-107,2026-07,folding,number,I used to spend 20 minutes pairing socks.,"Now it's zero, and here's why.",20 min → 0 min,16400,144,35,1.2
+W-108,2026-07,gift,question,Need a gift for the guy who has everything?,Get him socks that never lose their partner.,The gift he'll actually use,9200,128,31,1.1
+W-109,2026-07,waste,contrarian,Stop throwing away perfectly good socks.,The problem was never the sock. It was the missing partner.,Single socks aren't trash,14100,139,33,1.2
+W-110,2026-08,laundry-loss,social_proof,My husband laughed at magnetic socks. Then he lost one.,Now he steals mine.,He laughed. Then he switched.,25600,156,39,1.5
+W-111,2026-08,morning-rush,question,Why is there always one sock missing?,"Turns out, there's a fix for that.",Where's the other one?,7800,121,29,1.0
+W-112,2026-08,laundry-loss,contrarian,Your washer isn't eating your socks.,You're losing them before they even go in.,It's not the washer,18900,149,37,1.4
+W-113,2026-08,kids-chaos,demo,"Kids' socks, straight from the dryer. Still paired.",Snap. That's the whole trick.,Snap. Paired. Done.,21200,152,40,1.4
+W-114,2026-08,gift,social_proof,Gave these to my dad as a joke gift.,He asked for more pairs the next week.,The joke gift that stuck,6100,118,28,0.9
+W-115,2026-09,folding,pov_story,POV: folding laundry takes half the time.,Because the socks come out already paired.,"Laundry, but faster",5400,112,27,0.9
+W-116,2026-09,waste,number,I counted 14 single socks in my drawer.,That's seven pairs I paid for and can't wear.,14 orphan socks,12300,135,34,1.2
+W-117,2026-09,laundry-loss,question,Do your socks come back from the laundry in pairs?,Mine didn't. Until these.,Still in pairs?,4800,104,25,0.8
+W-118,2026-09,morning-rush,curiosity,I stopped matching socks in the morning. Here's how.,It took one tiny magnet.,I quit matching socks,17600,146,37,1.3
+W-119,2026-09,kids-chaos,question,How many single socks are in your laundry basket right now?,Ours had eleven.,Go check your basket,3900,98,24,0.8
+W-120,2026-09,laundry-loss,demo,I washed ten pairs on hot. Here's what came out.,"Every pair, still together.",10 pairs in. 10 pairs out.,33700,165,45,1.7
+W-121,2026-10,gift,curiosity,The stocking stuffer nobody expects.,Socks with a magnet that keeps them together.,"Wait, magnetic socks?",8600,126,32,1.1
+W-122,2026-10,waste,pain,My sock drawer is full of socks I can't wear.,Every one of them lost its partner.,A drawer of single socks,10900,131,31,1.1
+W-123,2026-10,folding,demo,Pairing socks in two seconds flat.,Click. Done. Next pair.,Click. Paired.,15200,141,36,1.3
+W-124,2026-10,morning-rush,social_proof,My roommate asked why I'm never late anymore.,I told her it's my socks. She didn't believe me.,My secret? Socks.,6900,116,28,0.9
+W-125,2026-10,laundry-loss,pov_story,POV: you just found out where the missing socks go.,"Spoiler: nowhere, if they're stuck together.","The sock mystery, solved",11800,133,33,1.2
+W-126,2026-10,kids-chaos,contrarian,Stop buying your kids new socks every month.,They're not wearing them out. They're losing them.,Kids don't wear out socks,13400,137,34,1.2
+W-127,2026-10,gift,pain,Every year I gift socks. Every year half go missing.,This year I found ones that stay in pairs.,Gift socks that stay paired,2900,95,22,0.8
+W-128,2026-11,waste,curiosity,What if single socks just... stopped existing?,That's what one tiny magnet does.,No more single socks,9900,129,31,1.1
+W-129,2026-11,folding,question,How long does it take you to sort socks?,It used to take me way too long.,Sock sorting: done,3400,101,23,0.8
+W-130,2026-11,laundry-loss,number,5 pairs. 1 tiny magnet each. 0 lost socks.,That's the whole pitch.,5 pairs. 0 lost socks.,20400,150,38,1.4
