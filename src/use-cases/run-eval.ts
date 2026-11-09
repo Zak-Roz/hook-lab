@@ -1,5 +1,6 @@
 // Use case: run every sample script with every prompt style and collect the numbers.
 import type { EvalRun } from '../domain/eval-report.ts';
+import { FIELD_LABEL } from '../domain/validation.ts';
 import type { SampleScript } from '../infra/files.ts';
 import type { WordLimitStyle } from '../llm/prompt.ts';
 import { generateVariations } from './generate-variations.ts';
@@ -29,7 +30,8 @@ export async function runEval(deps: GenerateDeps, options: EvalOptions): Promise
           ...base,
           variants: r.variants.map((v) => ({
             id: v.id, angle: v.angle, hook: v.hook, on_screen_text: v.on_screen_text,
-            status: v.status, fixed: Boolean(v.fixed), issues: v.issues.map((i) => i.message),
+            status: v.status, fixed: Boolean(v.fixed),
+            issues: v.issues.map((i) => `${FIELD_LABEL[i.field]}: ${i.message}`),
           })),
           firstPass: r.firstPass,
           repair: r.repair,

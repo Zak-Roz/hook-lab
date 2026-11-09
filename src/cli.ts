@@ -22,7 +22,7 @@ import { runEval } from './use-cases/run-eval.ts';
 const USAGE = `Usage:
   npm run generate -- <script.txt> [options]   one script → variants + brief
   npm run stats [-- --mock]                    pilot metrics from the web app log
-  npm run eval [-- --styles count,margin --repeat 1]   compare prompt versions (live API)
+  npm run eval [-- --styles margin,count --repeat 1]   compare prompt versions (live API)
 
 generate options:
   --count <n>        variants to generate (default ${DEFAULT_COUNT}, max 20)

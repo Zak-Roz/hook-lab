@@ -11,8 +11,8 @@ describe('prompts', () => {
     const system = buildSystemPrompt(brand);
     for (const fact of brand.facts) assert.ok(system.includes(fact), fact);
     assert.match(system, new RegExp(`Hard limit ${brand.limits.hookMaxWords} words; aim for ${brand.limits.hookMaxWords - 2}`));
-    assert.match(system, /count them before answering/);
-    assert.doesNotMatch(buildSystemPrompt(brand, 'margin'), /count them/);
+    assert.doesNotMatch(system, /count them/, 'default style is margin');
+    assert.match(buildSystemPrompt(brand, 'count'), /count them before answering/);
   });
 
   it('user prompt lists the script, examples and one slot per planned angle', () => {

@@ -7,11 +7,13 @@ import type { CheckedVariant } from '../domain/validation.ts';
 /**
  * How the prompt states word limits (compared by `npm run eval`):
  * - margin: aim 2 words below the hard limit;
- * - count:  the same, plus "count them before answering" — fewer errors, but more model reasoning (time, tokens).
+ * - count:  the same, plus "count them before answering".
+ * Eval 2026-11-08 (3 scripts × 10 variants each): both 100% valid; margin 31 s / $0.044 vs count 36 s / $0.053.
+ * So margin is the default; the repair round is the safety net.
  */
-export const WORD_LIMIT_STYLES = ['count', 'margin'] as const;
+export const WORD_LIMIT_STYLES = ['margin', 'count'] as const;
 export type WordLimitStyle = (typeof WORD_LIMIT_STYLES)[number];
-export const DEFAULT_WORD_LIMIT_STYLE: WordLimitStyle = 'count';
+export const DEFAULT_WORD_LIMIT_STYLE: WordLimitStyle = 'margin';
 
 /** Models miscount words, so ask for a margin below the hard limit. */
 function wordLimit(max: number, style: WordLimitStyle): string {
